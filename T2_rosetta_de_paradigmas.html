@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T2 — Rosetta de Paradigmas | CC0114</title>
+<style>
+  :root{
+    --ink:#14181f;
+    --ink-2:#3d4654;
+    --ink-3:#5c6678;
+    --line:#e3e7ec;
+    --line-2:#ccd4de;
+    --bg:#eef1f5;
+    --brand:#16324f;
+    --brand-2:#22507d;
+    --brand-soft:#eaf0f7;
+    --teal:#0f766e;
+    --teal-soft:#e7f4f2;
+    --amber:#9a5d08;
+    --amber-soft:#fdf3e3;
+    --plum:#6d28a8;
+    --plum-soft:#f4edfb;
+    --rose:#a4283f;
+    --rose-soft:#fbecef;
+    --green:#1c6b4a;
+    --green-soft:#e8f5ee;
+    --r:10px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    font-size:16.5px;line-height:1.7;
+  }
+  .sheet{
+    max-width:940px;margin:32px auto 64px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(20,24,31,.04),0 12px 32px rgba(20,24,31,.07);
+  }
+
+  /* cabeçalho */
+  .head{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-2) 60%,#2f6ea8 100%);color:#fff;padding:36px 46px 30px}
+  .head p,.head strong,.head em,.head b,.head code,.head dt,.head dd{color:#fff}
+  .head code{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3)}
+  .head .kicker{font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;opacity:.9;font-weight:700;margin:0 0 8px}
+  .head h1{font-size:32px;line-height:1.18;margin:0 0 10px;font-weight:700;letter-spacing:-.02em}
+  .head .sub{font-size:16px;opacity:.9;margin:0 0 22px;max-width:640px}
+  .meta{display:flex;flex-wrap:wrap;gap:9px}
+  .meta span{background:rgba(9,26,45,.32);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:4px 13px;font-size:12.5px;font-weight:600}
+
+  .body{padding:8px 46px 50px}
+  section{padding:32px 0;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:none}
+
+  .snum{
+    display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    background:var(--brand);color:#fff;border-radius:7px;font-size:12.5px;font-weight:700;margin-right:11px;
+    vertical-align:3px;
+  }
+  h2{font-size:24px;line-height:1.3;margin:0 0 6px;font-weight:700;letter-spacing:-.015em}
+  h3{font-size:18px;margin:28px 0 8px;font-weight:650}
+  h4{font-size:15.5px;margin:20px 0 6px;font-weight:650;color:var(--ink-2)}
+  .sec-lead{color:var(--ink-3);font-size:15px;margin:0 0 20px;font-style:italic}
+  p{margin:0 0 14px;color:var(--ink-2)}
+  ul,ol{margin:0 0 16px;padding-left:24px;color:var(--ink-2)}
+  li{margin:0 0 8px}
+  li::marker{color:var(--ink-3)}
+  strong{color:var(--ink);font-weight:650}
+  em{color:var(--ink-2)}
+  code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:#f2f4f7;border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:#233043}
+
+  /* objetivos */
+  .goals{background:var(--green-soft);border:1px solid #c4e2d2;border-radius:var(--r);padding:20px 24px}
+  .goals h2,.goals h3{margin:0 0 10px;font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--green)}
+  .goals ul{margin:0;padding-left:20px;color:#20452f}
+  .goals li{margin-bottom:6px}
+
+  /* roteiro */
+  .route{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .route div{display:grid;grid-template-columns:104px 1fr;gap:0;border-bottom:1px solid var(--line)}
+  .route div:last-child{border-bottom:none}
+  .route dt{background:#f5f7fa;padding:11px 15px;font-size:13px;font-weight:700;color:var(--brand-2);font-variant-numeric:tabular-nums;margin:0}
+  .route dd{padding:11px 17px;margin:0;font-size:14.5px;color:var(--ink-2)}
+  .route dd b{color:var(--ink);font-weight:650}
+
+  /* caixas */
+  .box{border-radius:var(--r);padding:17px 21px;margin:20px 0;border:1px solid var(--line-2);background:#f7f9fb}
+  .box .label{display:block;font-size:11px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:var(--ink-3);margin-bottom:6px}
+  .box p:last-child{margin-bottom:0}
+  .box ul:last-child,.box ol:last-child{margin-bottom:0}
+  .box.market{background:var(--amber-soft);border-color:#eed9b3}
+  .box.market .label{color:var(--amber)}
+  .box.tip{background:var(--teal-soft);border-color:#bfe0db}
+  .box.tip .label{color:var(--teal)}
+  .box.think{background:var(--plum-soft);border-color:#dfd0f0}
+  .box.think .label{color:var(--plum)}
+  .box.warn{background:var(--rose-soft);border-color:#f0ccd3}
+  .box.warn .label{color:var(--rose)}
+
+  /* código */
+  pre{
+    background:#101722;color:#dde5f0;border-radius:var(--r);padding:16px 19px;overflow-x:auto;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:13.4px;line-height:1.62;margin:8px 0 16px;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+  .cap{font-size:12.8px;color:var(--ink-3);margin:-10px 0 18px}
+  .lang{
+    display:inline-block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+    color:var(--brand-2);background:var(--brand-soft);border:1px solid #d3e0ee;border-radius:5px;padding:2px 9px;margin:14px 0 5px;
+  }
+
+  /* grade de cartões */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin:18px 0}
+  .card{border:1px solid var(--line);border-radius:var(--r);padding:17px 19px;background:#fbfcfd}
+  .card .k{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:7px}
+  .card .big{font-size:27px;font-weight:700;color:var(--brand);line-height:1.1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+  .card p{margin:0;font-size:14px;line-height:1.58}
+
+  /* tabelas */
+  .tw{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:var(--r)}
+  table{border-collapse:collapse;width:100%;font-size:14.2px;background:#fff}
+  th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  thead th{background:#f4f6f9;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:700;border-bottom:1px solid var(--line-2)}
+  tbody tr:last-child td{border-bottom:none}
+  td b{color:var(--ink)}
+
+  /* atividade */
+  .lab{border:2px solid var(--teal);border-radius:12px;overflow:hidden;margin:22px 0}
+  .lab-h{background:var(--teal);color:#fff;padding:14px 22px}
+  .lab-h .t{font-size:11px;letter-spacing:.13em;text-transform:uppercase;opacity:.86;font-weight:700}
+  .lab-h .n{font-size:19px;font-weight:700;margin-top:2px}
+  .lab-b{padding:20px 22px}
+  .lab-b p:last-child,.lab-b ol:last-child{margin-bottom:0}
+
+  .steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  .steps li{counter-increment:s;position:relative;padding-left:38px;margin-bottom:14px;color:var(--ink-2)}
+  .steps li::before{
+    content:counter(s);position:absolute;left:0;top:1px;width:25px;height:25px;border-radius:50%;
+    background:var(--brand-soft);color:var(--brand-2);font-size:12.5px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;border:1px solid #cfdeee;
+  }
+
+  /* resumo */
+  .recap{background:var(--brand-soft);border:1px solid #d2dfed;border-left:4px solid var(--brand-2);border-radius:var(--r);padding:20px 24px}
+  .recap h3{margin:0 0 10px;font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--brand-2)}
+  .recap ol{margin:0;padding-left:22px;color:#1e2c3c}
+  .recap li{margin-bottom:7px}
+
+  .ex{border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;margin-bottom:12px;background:#fbfcfd}
+  .ex .n{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--plum);margin-bottom:5px}
+  .ex p:last-child{margin-bottom:0}
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;
+       padding:16px 46px;border-top:1px solid var(--line);background:#fff;font-size:14px}
+  .nav a{color:var(--brand-2);text-decoration:none;font-weight:650;
+         border:1px solid var(--line-2);border-radius:999px;padding:6px 15px;background:#fbfcfd}
+  .nav a:hover{background:var(--brand-soft);border-color:#cfdeee}
+  .nav span{color:var(--ink-3);font-size:12.5px}
+  footer{padding:22px 46px 30px;border-top:1px solid var(--line);background:#f9fafb;font-size:12px;color:var(--ink-3)}
+  footer b{color:var(--ink-2)}
+
+  @media (max-width:720px){
+    body{font-size:16px}
+    .head,.body{padding-left:20px;padding-right:20px}
+    footer{padding-left:20px;padding-right:20px}
+    .head h1{font-size:25px}
+    .sheet{margin:0;border-radius:0;border-left:none;border-right:none}
+    .route div{grid-template-columns:1fr}
+    .route dt{border-bottom:1px solid var(--line)}
+  }
+  @media print{
+    body{background:#fff;font-size:10.5pt}
+    .sheet{box-shadow:none;border:none;margin:0}
+    .head{background:var(--brand)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    pre{background:#f4f6f9;color:#1a2331;border:1px solid #d8dee6;
+        white-space:pre-wrap;overflow:visible;word-break:break-word;font-size:8.6pt}
+    .tw{overflow:visible}
+    .tw table{font-size:8.6pt}
+    .snum,.lab-h{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .nav{display:none}
+    section{page-break-inside:auto}
+    h2,h3{break-after:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<header class="head">
+  <p class="kicker">CC0114 · Teoria e Paradigmas de Linguagens de Programação · Trabalho 2</p>
+  <h1>T2 — Rosetta de Paradigmas</h1>
+  <p class="sub">O mesmo problema, resolvido três vezes, em três paradigmas diferentes — mais uma quarta versão escrita por uma IA, que vocês vão auditar. No fim, a pergunta não é "qual linguagem é melhor", e sim: <strong>o que cada paradigma tornou fácil, e o que ele tornou desajeitado neste problema específico?</strong></p>
+  <div class="meta">
+    <span>Peso: 15% da média final</span>
+    <span>Em trios</span>
+    <span>Lançado: 04/11/2026</span>
+    <span>Entrega final: 25/11/2026</span>
+    <span>Três entregas parciais ao longo do caminho</span>
+  </div>
+</header>
+
+<div class="body">
+
+<section>
+  <div class="goals">
+    <h2>O que este trabalho verifica</h2>
+    <ul>
+      <li><b>RA5</b> — resolver um mesmo problema em paradigmas diferentes, analisando a adequação de cada um.</li>
+      <li><b>RA7</b> — auditar criticamente código gerado por IA, identificando falhas de tipos, escopo, efeitos colaterais e semântica.</li>
+    </ul>
+  </div>
+
+  <div class="box tip">
+    <span class="label">Como este trabalho é construído</span>
+    <p>
+      Vocês <strong>não</strong> vão fazer tudo no fim. Cada versão depende de uma aula que ainda vai acontecer, então o trabalho cresce junto com a disciplina: a versão imperativa sai com o que já foi dado, a funcional depois da aula de funções como valor, e a orientada a objetos depois da aula de OO. O cronograma da seção 8 diz exatamente o que entregar em cada data.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">1</span>O problema: "o que eu posso cursar?"</h2>
+  <p class="sec-lead">Um problema que todo mundo nesta sala já viveu na matrícula.</p>
+
+  <p>Dada a <strong>matriz curricular</strong> de um curso, o <strong>histórico</strong> de um aluno e a <strong>oferta</strong> de disciplinas do próximo semestre, o programa deve dizer o que esse aluno pode cursar — respeitando pré-requisitos, teto de carga horária e conflito de horário.</p>
+
+  <p>O programa responde a <strong>quatro perguntas</strong>. A ordem de execução importa e está fixada na seção 3.</p>
+
+  <ol class="steps">
+    <li><b>A matriz curricular é válida?</b> Uma matriz com ciclo de pré-requisitos — A exige B, que exige A — é erro de cadastro. O programa detecta o ciclo e exibe o caminho que o fecha. <em>Esta pergunta não depende do histórico: ela valida os dados.</em></li>
+    <li><b>Quais disciplinas o aluno está liberado a cursar?</b> As que estão na oferta, que ele ainda não cursou, e cujos pré-requisitos <strong>diretos</strong> ele já cumpriu.</li>
+    <li><b>Quais estão bloqueadas, e por quê?</b> Para cada disciplina da oferta que ele não pode cursar, listar <strong>todos</strong> os pré-requisitos diretos não cumpridos, em ordem crescente de código. Não basta dizer "bloqueada", e não basta citar um quando faltam dois.</li>
+    <li><b>Qual é a maior grade possível?</b> O conjunto de disciplinas liberadas com o <strong>maior número de disciplinas</strong> que não tenha nenhum conflito de horário e cuja soma de carga horária caiba no teto. Se houver empate no número de disciplinas, <strong>liste todas</strong> as soluções empatadas.</li>
+  </ol>
+
+  <div class="box warn">
+    <span class="label">Três decisões já tomadas, para as três versões não divergirem</span>
+    <p>
+      <b>Pré-requisito é direto, não transitivo.</b> Uma disciplina está liberada quando <em>todos</em> os seus pré-requisitos diretos constam como aprovados no histórico. Não se sobe a cadeia.<br>
+      <b>"Maior" é maior número de disciplinas</b>, não maior carga horária. A carga horária é restrição, não objetivo: entre uma grade de 5 disciplinas somando 270 h e uma de 4 somando 300 h, vence a primeira, desde que ambas caibam no teto.<br>
+      <b>Empates não são desempatados.</b> Todas as soluções de tamanho máximo entram na resposta.<br>
+      A única restrição da grade é conflito de horário e teto. Não é preciso verificar se uma disciplina e seu pré-requisito caem no mesmo semestre — pela regra acima, isso não acontece.
+    </p>
+  </div>
+
+  <div class="box tip">
+    <span class="label">Por que este problema e não outro</span>
+    <p>
+      Ele tem <strong>quatro naturezas diferentes</strong> em um só enunciado, e é isso que faz a comparação valer: há travessia de grafo (validar a matriz), modelagem de domínio (disciplina, aluno, horário), transformação de coleções (filtrar, agrupar, somar) e busca combinatória com restrições (a maior grade sem conflito). Nenhum paradigma ganha nos quatro. Prestem atenção em <em>onde</em> cada um ganha — e em quanto do resultado veio do paradigma e quanto veio das regras da seção 4.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">2</span>Os dados</h2>
+  <p class="sec-lead">Todos os trios usam exatamente estes dados, e os arquivos já vêm prontos na pasta <code>dados/</code> do repositório-modelo. Não digitem de novo: erro de digitação faz uma equipe certa parecer errada.</p>
+
+  <h3>Matriz curricular</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th scope="col" style="width:90px">Código</th><th scope="col">Disciplina</th><th scope="col" style="width:70px">CH</th><th scope="col" style="width:200px">Pré-requisitos</th></tr></thead>
+    <tbody>
+      <tr><td><code>CC0101</code></td><td>Algoritmos I</td><td>60</td><td>—</td></tr>
+      <tr><td><code>CC0102</code></td><td>Matemática Discreta</td><td>60</td><td>—</td></tr>
+      <tr><td><code>CC0103</code></td><td>Algoritmos II</td><td>60</td><td><code>CC0101</code></td></tr>
+      <tr><td><code>CC0104</code></td><td>Estrutura de Dados</td><td>60</td><td><code>CC0103</code></td></tr>
+      <tr><td><code>CC0105</code></td><td>Arquitetura de Computadores</td><td>60</td><td><code>CC0101</code></td></tr>
+      <tr><td><code>CC0106</code></td><td>Teoria dos Grafos</td><td>60</td><td><code>CC0102</code>, <code>CC0104</code></td></tr>
+      <tr><td><code>CC0107</code></td><td>Banco de Dados</td><td>60</td><td><code>CC0104</code></td></tr>
+      <tr><td><code>CC0108</code></td><td>Sistemas Operacionais</td><td>60</td><td><code>CC0105</code>, <code>CC0104</code></td></tr>
+      <tr><td><code>CC0109</code></td><td>Compiladores</td><td>60</td><td><code>CC0106</code>, <code>CC0114</code></td></tr>
+      <tr><td><code>CC0110</code></td><td>Redes de Computadores</td><td>60</td><td><code>CC0105</code></td></tr>
+      <tr><td><code>CC0111</code></td><td>Engenharia de Software</td><td>60</td><td><code>CC0107</code></td></tr>
+      <tr><td><code>CC0112</code></td><td>Métodos Numéricos</td><td>60</td><td><code>CC0102</code></td></tr>
+      <tr><td><code>CC0113</code></td><td>Probabilidade e Estatística</td><td>60</td><td><code>CC0102</code></td></tr>
+      <tr><td><code>CC0114</code></td><td>Teoria e Paradigmas de LP</td><td>60</td><td><code>CC0103</code></td></tr>
+      <tr><td><code>CC0115</code></td><td>Libras</td><td>30</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Oferta do próximo semestre</h3>
+  <p>Cada encontro é um par <code>(dia, turno)</code>. Turno <code>M</code> é manhã, <code>T</code> é tarde. Duas disciplinas conflitam se compartilham <strong>pelo menos um</strong> par.</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th scope="col" style="width:90px">Código</th><th scope="col">Disciplina</th><th scope="col" style="width:230px">Horários</th></tr></thead>
+    <tbody>
+      <tr><td><code>CC0104</code></td><td>Estrutura de Dados</td><td><code>SEG-M</code>, <code>QUA-M</code></td></tr>
+      <tr><td><code>CC0106</code></td><td>Teoria dos Grafos</td><td><code>SEG-T</code>, <code>QUA-T</code></td></tr>
+      <tr><td><code>CC0107</code></td><td>Banco de Dados</td><td><code>TER-T</code>, <code>QUI-T</code></td></tr>
+      <tr><td><code>CC0110</code></td><td>Redes de Computadores</td><td><code>SEG-M</code>, <code>QUI-T</code></td></tr>
+      <tr><td><code>CC0112</code></td><td>Métodos Numéricos</td><td><code>TER-M</code>, <code>QUI-M</code></td></tr>
+      <tr><td><code>CC0113</code></td><td>Probabilidade e Estatística</td><td><code>TER-M</code>, <code>SEX-M</code></td></tr>
+      <tr><td><code>CC0114</code></td><td>Teoria e Paradigmas de LP</td><td><code>QUA-T</code>, <code>SEX-T</code></td></tr>
+      <tr><td><code>CC0115</code></td><td>Libras</td><td><code>TER-T</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>O aluno e o teto</h3>
+  <p>Histórico — disciplinas <strong>aprovadas</strong>: <code>CC0101</code>, <code>CC0102</code>, <code>CC0103</code>, <code>CC0105</code>.<br>
+  Teto de carga horária no semestre: <strong>240 horas</strong>.</p>
+
+  <div class="box warn">
+    <span class="label">Os dados vêm de arquivo, não do código</span>
+    <p>
+      A matriz, a oferta e o histórico são lidos de <strong>arquivos JSON</strong> — o mesmo formato para as três implementações, para que as três rodem sobre os mesmos bytes. Trocar o conjunto de entrada não pode exigir tocar no código.
+      <br><b>Exceção para C:</b> como C não traz leitor de JSON na biblioteca padrão, quem escolher C pode ler os mesmos dados em CSV (fornecidos junto) ou usar uma biblioteca como <code>cJSON</code>. Em qualquer caso, <strong>o código de leitura não é contado</strong> em nenhuma métrica da seção 7 — ele não diz nada sobre paradigma.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">3</span>Contrato de saída</h2>
+  <p class="sec-lead">Esta é a seção que torna possível comparar as três versões — e corrigi-las. Leiam com atenção.</p>
+
+  <p>As três implementações imprimem <strong>um único JSON</strong> na saída padrão, com exatamente estas chaves:</p>
+
+  <pre><code>{
+  "ciclo":          null  ou  ["CC0106", "CC0109", "CC0106"],
+  "liberadas":      ["CC0104", "CC0110", ...],
+  "bloqueadas":     [ {"codigo": "CC0106", "faltam": ["CC0104"]}, ... ],
+  "grades_maximas": [ ["CC0104","CC0112","CC0114","CC0115"], ... ]
+}</code></pre>
+
+  <ol class="steps">
+    <li><b>A validação roda primeiro.</b> Se houver ciclo, <code>"ciclo"</code> recebe o caminho e as outras três chaves recebem <code>null</code> — o programa não tenta responder o resto. Essa ordem é o que impede o laço infinito.</li>
+    <li><b>Toda lista é ordenada.</b> Códigos em ordem crescente dentro de cada lista; <code>bloqueadas</code> ordenada por <code>codigo</code>; <code>grades_maximas</code> em ordem lexicográfica entre as grades.</li>
+    <li><b>Conjunto vazio é lista vazia</b>, não <code>null</code> e não ausência da chave. Quando não há nenhuma grade possível, <code>grades_maximas</code> é <code>[[]]</code> — uma única solução, que é a grade vazia.</li>
+  </ol>
+
+  <div class="box tip">
+    <span class="label">Por que isso vale a pena</span>
+    <p>
+      Com o formato fixado, a "bateria de testes comum" que a rubrica cobra vira um <code>diff</code> entre a saída das três versões e o arquivo <code>saidas_esperadas.json</code>, que vem junto com os dados. Sem esse formato, três saídas corretas em formatos diferentes seriam indistinguíveis de três saídas erradas — e é justamente a equivalência entre as versões que vale 25% da nota.
+      <br><br>
+      As respostas virem prontas é de propósito: elas são <strong>especificação</strong>, não gabarito. O que este trabalho avalia não é descobrir que a resposta do caso 1 é 210 h — é construir três implementações fiéis aos seus paradigmas e comparar o que cada uma custou.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">4</span>As três implementações</h2>
+  <p class="sec-lead">O risco deste trabalho é escrever a mesma solução imperativa três vezes com sintaxe diferente. As regras abaixo existem para impedir isso. O critério é <strong>semântico</strong>; as proibições nomeadas são apenas como ele se aplica em cada linguagem.</p>
+
+  <h3>Imperativa</h3>
+  <p><b>Critério:</b> o algoritmo avança <strong>mutando estado</strong>; a unidade de composição é o comando, não a expressão; nenhuma coleção é percorrida, filtrada, agregada, ordenada ou combinada por uma única chamada de biblioteca. Se é preciso visitar todos os elementos, o percurso é escrito à mão.</p>
+  <p><b>Em Python, isso proíbe nominalmente:</b> <code>map</code>, <code>filter</code>, <code>reduce</code>, compreensões de lista/dicionário/conjunto, expressões geradoras, <code>sum</code>, <code>any</code>, <code>all</code>, <code>min</code>/<code>max</code> e <code>sorted</code> (com ou sem <code>key=</code>), operações de conjunto (<code>-</code>, <code>&amp;</code>, <code>|</code>), <code>collections.Counter</code> e <strong>todo o <code>itertools</code></strong> — em especial <code>combinations</code>, que resolveria a pergunta 4 numa linha. Em C e Go a regra quase não morde, porque a linguagem já não oferece essas construções: aí o mérito da sua versão está em outro lugar, e a análise comparativa deve dizer qual.</p>
+  <p><b>Recursão é permitida</b> no imperativo. E sim: como o contrato da seção 3 exige listas ordenadas e <code>sorted</code> está fora, a versão imperativa escreve a própria ordenação — é uma dúzia de linhas e faz parte do ponto. Sugestões de linguagem: C, Go ou Python.</p>
+
+  <h3>Orientada a objetos</h3>
+  <p><b>Critério:</b> o domínio modelado em objetos que guardam dados <em>e</em> as decisões sobre eles. Três exigências verificáveis:</p>
+  <ol class="steps">
+    <li><b>Diga, não pergunte.</b> Nenhuma classe cujos únicos membros públicos sejam <em>getters</em> e <em>setters</em>. A regra sobre pré-requisito pertence a quem tem os dados do pré-requisito.</li>
+    <li><b>Polimorfismo com despacho dinâmico usado de fato em pelo menos um ponto.</b> Por exemplo, uma interface <code>Restricao</code> implementada por <code>TetoDeCargaHoraria</code> e <code>ConflitoDeHorario</code>, que a busca da pergunta 4 consulta sem saber qual é qual.</li>
+    <li><b>Sem <code>instanceof</code> ou <code>switch</code> sobre tipo</b> onde o despacho dinâmico resolveria.</li>
+  </ol>
+  <p>Continua <strong>proibida</strong> a classe única com métodos estáticos — é código imperativo de fantasia —, e também o modelo anêmico: três classes só de dados mais uma classe de serviço que faz tudo é a mesma fantasia com mais arquivos. Sugestões: Java, Kotlin ou C#.</p>
+
+  <div class="box think">
+    <span class="label">Streams, LINQ e a honestidade da comparação</span>
+    <p>
+      Vocês <strong>podem</strong> usar Streams em Java, LINQ em C# ou <code>filter</code>/<code>map</code>/<code>fold</code> em Kotlin. Mas repare no que isso significa: são operações de alta ordem sobre coleções, ou seja, a sua versão "OO" vai ser, em boa parte, uma segunda versão funcional com classes em volta. Isso não é problema — é um fato interessante sobre as linguagens OO de hoje. O que a análise comparativa <strong>tem</strong> de fazer é encarar a pergunta: <em>qual parte da nossa versão OO é OO de fato, e qual é funcional de empréstimo?</em>
+    </p>
+  </div>
+
+  <h3>Funcional</h3>
+  <p><b>Critério:</b> <strong>transparência referencial</strong> — toda chamada com os mesmos argumentos pode ser substituída pelo seu resultado sem mudar o programa. Nenhum valor é modificado depois de criado; nenhuma variável é reatribuída; nenhum laço.</p>
+  <p><b>Núcleo puro, casca impura.</b> Todas as funções que <em>decidem</em> algo são puras. As impuras são apenas duas — ler os arquivos e imprimir o JSON — e ficam na fronteira: nenhuma função de cálculo as chama. Em Haskell o sistema de tipos obriga essa separação; em Python e JavaScript ela é só disciplina. Essa diferença é ótimo material para a análise.</p>
+  <p><b>Se escolherem Python ou JavaScript, dois avisos:</b> use <code>tuple</code> e <code>frozenset</code> (ou bibliotecas persistentes) para as estruturas do domínio, porque <code>const</code> em JS <strong>não</strong> torna o objeto imutável; e nenhuma das duas faz otimização de chamada de cauda, então recursão profunda estoura. Se precisarem mexer no limite de recursão, <strong>registrem isso como achado da análise</strong> — "o paradigma exige recursão e a implementação não a suporta" é exatamente o tipo de observação que este trabalho procura. Sugestões: Haskell, Elixir, F#, Scala, ou Python/JavaScript em estilo estritamente funcional.</p>
+
+  <h3>A quarta versão, gerada por IA</h3>
+  <p>Pedida a um assistente, em qualquer uma das três linguagens que vocês usaram. Entra <strong>intacta</strong>, para ser auditada — não para ser corrigida nem aproveitada. Detalhes na seção 6.</p>
+
+  <div class="box think">
+    <span class="label">Pense antes de começar</span>
+    <p>
+      A pergunta 4 — a maior grade sem conflito — é busca em subconjuntos. Laços aninhados <strong>não</strong> resolvem, porque a profundidade do aninhamento teria de ser o tamanho da solução, que você não sabe ao escrever: use um laço sobre máscaras de bits (2<sup>n</sup>) ou recursão com retrocesso. O contraste interessante com o funcional não é laço contra recursão — é <strong>desfazer a mutação</strong> contra <strong>passar uma lista nova adiante</strong>.<br><br>
+      Já a pergunta 1 — detectar ciclo — tem uma solução funcional elegante <em>sem marcação nenhuma</em>: remover repetidamente as disciplinas sem pré-requisito pendente; se sobrar alguma e nenhuma for removível, há ciclo. O que custa caro é <strong>exibir o caminho</strong> do ciclo, que exige carregar o caminho corrente na travessia. Comparem as duas estratégias — e, se não conseguirem exibir o caminho na versão funcional, detectar e justificar por escrito vale nota parcial.<br><br>
+      Anotem essas impressões <strong>enquanto</strong> programam. É esse material que vira a análise comparativa, e ninguém o reconstrói depois.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">5</span>A bateria de testes comum</h2>
+  <p class="sec-lead">As três implementações devem produzir estas respostas. Os valores foram calculados e conferidos por duas implementações independentes.</p>
+
+  <div class="ex">
+    <div class="n">Caso 1 · Dados da seção 2 — teto 240 h</div>
+    <p><b>Validação:</b> sem ciclo.</p>
+    <p><b>Liberadas (6):</b> <code>CC0104</code>, <code>CC0110</code>, <code>CC0112</code>, <code>CC0113</code>, <code>CC0114</code>, <code>CC0115</code> — somando 330 h.</p>
+    <p><b>Bloqueadas:</b> <code>CC0106</code> (falta <code>CC0104</code>) e <code>CC0107</code> (falta <code>CC0104</code>).</p>
+    <p><b>Maior grade:</b> <strong>4 disciplinas, 210 h</strong>, com <strong>quatro</strong> soluções empatadas:</p>
+    <pre><code>["CC0104","CC0112","CC0114","CC0115"]
+["CC0104","CC0113","CC0114","CC0115"]
+["CC0110","CC0112","CC0114","CC0115"]
+["CC0110","CC0113","CC0114","CC0115"]</code></pre>
+    <p>Aqui quem manda são os <strong>conflitos de horário</strong>, não o teto: <code>CC0104</code> × <code>CC0110</code> disputam <code>SEG-M</code> e <code>CC0112</code> × <code>CC0113</code> disputam <code>TER-M</code>, e em cada par só cabe uma. A grade vencedora ainda tem 30 h de folga sob o teto. Quem implementar a pergunta 4 como se fosse só um problema de encaixar carga horária vai obter <code>CC0104, CC0110, CC0112, CC0113</code> = 240 h, que é inválido.</p>
+  </div>
+
+  <div class="ex">
+    <div class="n">Caso 2 · Matriz inválida — <code>dados/caso2_ciclo.json</code></div>
+    <p>O pré-requisito de <code>CC0106</code> passa a ser <code>CC0102</code>, <code>CC0104</code> e <code>CC0109</code>. Como <code>CC0109</code> já exige <code>CC0106</code>, forma-se um ciclo.</p>
+    <p><b>Saída esperada:</b> <code>"ciclo": ["CC0106","CC0109","CC0106"]</code>, e as outras três chaves em <code>null</code>. O programa não entra em laço infinito e não tenta responder as perguntas 2 a 4.</p>
+  </div>
+
+  <div class="ex">
+    <div class="n">Caso 3 · Aluno calouro — <code>dados/caso3_historico_vazio.json</code></div>
+    <p><b>Validação:</b> sem ciclo. <b>Liberadas:</b> só <code>CC0115</code>. <b>Maior grade:</b> uma única, <code>[["CC0115"]]</code>, 30 h.</p>
+    <p><b>Bloqueadas — sete, e repare nas que têm dois faltantes:</b></p>
+    <pre><code>CC0104 ← CC0103
+CC0106 ← CC0102, CC0104      (dois)
+CC0107 ← CC0104
+CC0110 ← CC0105
+CC0112 ← CC0102
+CC0113 ← CC0102
+CC0114 ← CC0103</code></pre>
+  </div>
+
+  <div class="ex">
+    <div class="n">Caso 4 · Aluno que já cursou toda a oferta — <code>dados/caso4_historico_completo.json</code></div>
+    <p><b>Liberadas:</b> <code>[]</code>. <b>Bloqueadas:</b> <code>[]</code> — não sobra nenhuma disciplina da oferta para bloquear. <b>Maior grade:</b> <code>[[]]</code>, a grade vazia, 0 h.</p>
+  </div>
+
+  <div class="ex">
+    <div class="n">Caso 5 · Teto reduzido para 150 h — <code>dados/caso5_teto_reduzido.json</code></div>
+    <p>Mesmos dados do caso 1, só o teto muda. Agora é o <strong>teto</strong> que manda: nenhuma grade de 4 disciplinas cabe em 150 h.</p>
+    <p><b>Maior grade:</b> <strong>3 disciplinas, 150 h</strong>, com <strong>oito</strong> soluções empatadas. Todas incluem <code>CC0115</code>, porque 3 × 60 h já passaria do teto:</p>
+    <pre><code>["CC0104","CC0112","CC0115"]   ["CC0110","CC0112","CC0115"]
+["CC0104","CC0113","CC0115"]   ["CC0110","CC0113","CC0115"]
+["CC0104","CC0114","CC0115"]   ["CC0110","CC0114","CC0115"]
+["CC0112","CC0114","CC0115"]   ["CC0113","CC0114","CC0115"]</code></pre>
+  </div>
+
+  <div class="box warn">
+    <span class="label">Os casos 4 e 5 são os que mais derrubam</span>
+    <p>
+      O <strong>caso 4</strong> é o do conjunto vazio: é onde implementações descuidadas quebram — índice fora da faixa, divisão por zero ao calcular média, <code>max</code> sobre coleção vazia. O <strong>caso 5</strong> é o único em que o teto de carga horária é a restrição ativa: uma implementação que simplesmente <em>ignore</em> o teto passa nos casos 1 a 4 e só falha aqui. Rodem os cinco casos nas três implementações antes de entregar.
+    </p>
+  </div>
+
+  <div class="box tip">
+    <span class="label">Se vocês acharem que o gabarito está errado</span>
+    <p>
+      Divergiu, comece assumindo que a sua está errada — mas releiam e, se ainda acharem que o erro é meu, venham falar comigo. <strong>Achar erro no enunciado vale ponto.</strong>
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">6</span>A versão gerada por IA e a auditoria</h2>
+  <p class="sec-lead">Vale 20% da nota do trabalho. É a parte que a disciplina mais valoriza, e a que mais gente entrega mal.</p>
+
+  <p>Peçam a um assistente uma solução completa do problema, em uma das três linguagens que vocês usaram. Guardem <strong>o prompt exato</strong> e <strong>a resposta exata</strong>, sem edição. Depois rodem os cinco casos de teste em cima dela.</p>
+
+  <p>Para cada defeito encontrado, o relatório precisa de três coisas:</p>
+  <ol class="steps">
+    <li><b>Descrever o defeito</b> e mostrar a entrada que o revela.</li>
+    <li><b>Classificar pela causa mais precoce</b>, usando a tabela abaixo. Se dois rótulos couberem, escolham o primário e citem o secundário.</li>
+    <li><b>Dizer qual verificador o pegaria mais barato:</b> o compilador, um teste automatizado, a revisão humana, ou só o usuário em produção. Esta é a pergunta que amarra o trabalho ao resto da disciplina.</li>
+  </ol>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th scope="col" style="width:215px">Natureza</th><th scope="col">O que é, e o que não é</th></tr></thead>
+    <tbody>
+      <tr><td><b>Erro de tipo</b></td><td>Operação aplicada a um valor cujo tipo não a admite. Em linguagem estática aparece na compilação; em dinâmica pode virar exceção em execução — ou, pior, coerção silenciosa que produz resposta errada sem erro nenhum. Os três desfechos são diferentes e devem ser distinguidos.</td></tr>
+      <tr><td><b>Erro de escopo ou vinculação</b></td><td>O nome <strong>existe</strong> no programa, mas está ligado à coisa errada ou não é visível ali: sombreamento, captura de closure sobre variável de laço, tempo de vida, escopo de módulo.</td></tr>
+      <tr><td><b>Fato inventado</b></td><td>O nome <strong>não existe em lugar nenhum</strong>: função, biblioteca, parâmetro ou comportamento documentado que o modelo fabricou. É específico de código gerado, e é o que distingue esta categoria da anterior.</td></tr>
+      <tr><td><b>Efeito colateral ou <em>aliasing</em></b></td><td>Mutação não pretendida de estrutura compartilhada, estado global, argumento padrão mutável, objeto devolvido e depois modificado por quem chamou. Efeito colateral em si não é defeito — <em>não pretendido</em> é.</td></tr>
+      <tr><td><b>Semântica do problema</b></td><td>O código é bem formado e bem comportado, mas implementa a regra errada: trata pré-requisitos como OU em vez de E, confunde "cursou" com "foi aprovado", devolve <em>uma</em> grade máxima em vez de todas.</td></tr>
+      <tr><td><b>Terminação ou robustez</b></td><td>Não termina, estoura a pilha, lança exceção não tratada, ou falha em entrada vazia ou degenerada. É a categoria dos casos 2 e 4 — e a IA quase sempre escreve verificação recursiva de pré-requisito sem detecção de ciclo.</td></tr>
+      <tr><td><b>Complexidade</b></td><td>Correto, mas inviável: busca exponencial onde há solução polinomial, recomputação repetida do mesmo subproblema.</td></tr>
+      <tr><td><b>Suposição não declarada</b></td><td>O modelo preencheu silenciosamente uma lacuna da especificação em vez de perguntar. É o defeito que nenhum compilador e nenhum teste pegam — e por isso o mais interessante dos oito.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="box warn">
+    <span class="label">O que não conta como defeito</span>
+    <p>
+      Estilo, nomes, formatação e fidelidade a paradigma <strong>não</strong> são defeitos nesta auditoria — a versão da IA não está sujeita às regras da seção 4. Defeito é o que faz o programa dar resposta errada, não dar resposta, ou depender de algo que não existe.
+    </p>
+  </div>
+
+  <div class="box market">
+    <span class="label">Radar da indústria · o número que vimos na aula 05</span>
+    <p>
+      Entre os códigos gerados por modelos de linguagem que <strong>não compilam</strong>, cerca de 94% falham no sistema de tipos. Leiam o condicional com cuidado: a população é "código que não compila", e numa linguagem estática quase todo erro de compilação <em>é</em> de tipo ou de vinculação, por construção. O número mede <strong>o que o compilador sabe recusar</strong> — não o que a IA erra. O que a IA erra e o compilador não vê é exatamente o que esta auditoria procura: semântica do problema, terminação e suposição não declarada. Se a IA acertar de primeira, isso também é resultado: relatem, e expliquem o que no problema tornou a tarefa fácil para ela.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">7</span>A análise comparativa</h2>
+  <p class="sec-lead">Três eixos, cada um com evidência. Opinião sem medida não pontua.</p>
+
+  <h3>Legibilidade</h3>
+  <p>Contem <strong>apenas as linhas que respondem às quatro perguntas</strong> — fora leitura de arquivo, declarações de tipo e impressão, que dominariam a métrica sem dizer nada. Somem a isso uma medida estrutural que atravessa linguagens: número de abstrações nomeadas, profundidade máxima de aninhamento, ou complexidade da função mais complexa. E façam o teste prático: <strong>a mesma pessoa</strong> de outro trio lê as três versões, em ordem sorteada, e vocês registram não só quanto tempo ela levou, mas <strong>o que ela entendeu errado</strong> — o erro de leitura é o dado interessante.</p>
+
+  <h3>Expressividade</h3>
+  <p>Para cada uma das quatro perguntas: quanto do código é o problema e quanto é mecanismo. Onde a linguagem deu a operação pronta e onde vocês tiveram de construí-la. Mostrem o mesmo trecho nas três versões, lado a lado.</p>
+
+  <h3>Desempenho</h3>
+  <p>Meçam em <strong>dois regimes</strong>, porque eles respondem a perguntas diferentes:</p>
+  <ol class="steps">
+    <li><b>Ponta a ponta (frio).</b> Tempo do processo inteiro, startup incluído, repetido pelo menos 20 vezes. É o que o usuário sente, e é onde o modelo de implementação aparece: compilação antecipada, máquina virtual com carregamento de classes, ou interpretador.</li>
+    <li><b>Em regime (quente).</b> Um laço <em>dentro</em> do programa repetindo as quatro perguntas mil vezes, descartando as primeiras iterações e medindo as últimas. Só aqui "descartar o aquecimento" quer dizer alguma coisa — um JIT aquece <strong>dentro</strong> de um processo, e rodar o programa dez vezes do terminal nunca o aquece.</li>
+  </ol>
+  <p>Reportem <strong>mediana, mínimo e intervalo interquartil</strong>, não a média: distribuições de tempo têm cauda à direita, e a média é puxada por ruído do sistema. O mínimo é informativo por ser a execução menos perturbada.</p>
+
+  <div class="box warn">
+    <span class="label">Três armadilhas de método — e a honestidade que se espera de vocês</span>
+    <p>
+      <b>Toda primeira execução é atípica</b>, não só com JIT: cache de página do sistema operacional, ligação dinâmica, caches de CPU frios, heap do coletor ainda crescendo. Com JIT o efeito é de outra ordem de grandeza e de outra causa — compilação em camadas durante a execução. E JIT é propriedade da <strong>implementação</strong>, não da linguagem.<br><br>
+      <b>O eixo Desempenho compara implementações, não paradigmas.</b> Se vocês medirem C contra Java contra Haskell, mediram GCC contra a JVM contra o GHC. Uma diferença só pode ser atribuída ao paradigma quando vocês apontarem o mecanismo: estrutura persistente com acesso O(log n) em vez de vetor O(1), cópia em vez de mutação, avaliação tardia acumulando thunks. Se quiserem isolar de verdade, escrevam uma versão imperativa e uma funcional <strong>na mesma linguagem</strong> — é barato e é o experimento honesto.<br><br>
+      <b>Parte da verbosidade da versão imperativa foi imposta pelas regras da seção 4</b>, não pelo paradigma. Estimem quanto: reescrevam <em>uma</em> função usando as construções proibidas e comparem o tamanho. Esse exercício é curto e é provavelmente a coisa mais útil que este trabalho tem a ensinar sobre método.
+    </p>
+  </div>
+
+  <p>Para medir em escala, gerem uma <strong>matriz ampliada com 200 disciplinas</strong> — mas mantenham a <strong>oferta com no máximo 16</strong>. A pergunta 4 é exponencial no tamanho da oferta: ampliá-la faz a busca não terminar e vocês mediriam explosão combinatória, não linguagem. Essa observação, aliás — que três das quatro perguntas são lineares e uma é intratável — entra na análise.</p>
+
+  <p>A conclusão deve responder, em no máximo meia página: <strong>qual paradigma foi mais adequado a este problema, e o que mudaria a resposta.</strong> "Depende" só vale se vocês disserem de quê.</p>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">8</span>Cronograma: o trabalho cresce com as aulas</h2>
+  <p class="sec-lead">Três entregas parciais e uma final. Cada etapa só depende de aula já dada.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th scope="col" style="width:92px">Data</th><th scope="col" style="width:170px">Etapa</th><th scope="col">O que entregar</th><th scope="col" style="width:195px">Aula que dá o conteúdo</th></tr></thead>
+    <tbody>
+      <tr><td><b>04/11</b><br><span style="font-size:14px">hoje</span></td><td><b>Etapa 0 · Partida</b></td>
+          <td>Trio formado, três linguagens escolhidas, repositório criado, arquivos de <code>dados/</code> lidos pelo programa — ainda sem resolver nada.</td>
+          <td>Expressões, controle de fluxo e subprogramas</td></tr>
+      <tr><td><b>11/11</b></td><td><b>Etapa 1 · Imperativa<br>+ IA + medição</b></td>
+          <td>Versão imperativa passando nos cinco casos. <strong>Mais:</strong> a versão gerada por IA com o relatório de auditoria, e o arnês de medição com o gerador de matriz ampliada. Nada disso depende de aula nova — e tirá-los da última semana é o que torna o prazo viável.</td>
+          <td>Já dado: subprogramas, laços, tratamento de erro</td></tr>
+      <tr><td><b>18/11</b></td><td><b>Etapa 2 · Funcional</b></td>
+          <td>Versão funcional completa, obedecendo ao critério da seção 4, com saída idêntica à da imperativa nos cinco casos.</td>
+          <td>Subprogramas II — funções como valor, closures e genéricos (11/11)</td></tr>
+      <tr><td><b>25/11</b><br><span style="font-size:14px">final</span></td><td><b>Etapa 3 · OO + análise</b></td>
+          <td>Versão orientada a objetos, análise comparativa dos três eixos e o <code>README</code> de reprodução.</td>
+          <td>Orientação a objetos (18/11)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="box warn">
+    <span class="label">Uma regra sobre como o trio se organiza</span>
+    <p>
+      A divisão óbvia — uma linguagem por pessoa — destrói o objetivo do trabalho: cada um viveria <strong>um</strong> paradigma e a análise comparativa, que vale 20%, seria escrita por três pessoas que não entendem duas das três versões. Então: na apresentação, <strong>cada integrante explica uma versão que não escreveu</strong>, e o <code>ANALISE.md</code> diz quem escreveu e quem revisou cada uma.
+    </p>
+  </div>
+
+  <div class="box warn">
+    <span class="label">Atrasos</span>
+    <p>
+      As entregas parciais não têm nota própria, mas são obrigatórias: cada uma não entregue custa <strong>0,5 ponto</strong> na nota final do T2. A entrega final em atraso sofre desconto de <strong>1,0 ponto por dia útil</strong>, limitado a três dias; depois disso, nota zero.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">9</span>Entregáveis e estrutura do repositório</h2>
+
+  <pre><code>t2-rosetta-&lt;trio&gt;/
+├── README.md                        como rodar tudo do zero
+├── dados/                           fornecidos — não alterem
+│   ├── matriz.json
+│   ├── oferta.json
+│   ├── historico.json               caso 1
+│   ├── caso2_ciclo.json
+│   ├── caso3_historico_vazio.json
+│   ├── caso4_historico_completo.json
+│   └── caso5_teto_reduzido.json
+├── saidas_esperadas.json            as respostas dos cinco casos, no formato da seção 3
+├── imperativa/
+├── funcional/
+├── oo/
+├── gerada-por-ia/
+│   ├── PROMPT.md                    o prompt exato, sem edição
+│   └── RESPOSTA-ORIGINAL/           o código como veio, sem correção
+├── medicao/                         arnês de medição + gerador da matriz ampliada
+├── ANALISE.md                       análise comparativa dos três eixos
+├── AUDITORIA.md                     defeitos da versão gerada, classificados
+└── USO-DE-IA.md                     uso de IA em todo o resto do trabalho</code></pre>
+
+  <div class="box tip">
+    <span class="label">O README é critério de nota</span>
+    <p>
+      Vale 5%. Um avaliador que nunca viu o projeto precisa clonar, seguir o README e rodar as três implementações sobre os cinco casos. O nível máximo da rubrica pede <strong>um comando só</strong> que roda tudo e compara as saídas com o gabarito — um <code>Makefile</code>, um script, o que preferirem.
+    </p>
+  </div>
+
+  <div class="box warn">
+    <span class="label">Sobre o uso de IA no resto do trabalho</span>
+    <p>
+      Usar assistente nas três implementações é <strong>permitido</strong> e deve ser declarado no <code>USO-DE-IA.md</code>: o que foi gerado, o que foi aceito, o que foi corrigido. O que não é permitido é entregar código que o trio não sabe explicar — e isso aparece na primeira pergunta que eu fizer. A versão em <code>gerada-por-ia/</code> é outra coisa: entra intacta, como objeto de estudo, e não deve ser corrigida.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="snum" aria-hidden="true">10</span>Como vai ser corrigido</h2>
+  <div class="tw">
+  <table>
+    <thead><tr><th scope="col" style="width:200px">Critério</th><th scope="col">O que o nível máximo exige</th><th scope="col" style="width:60px">Peso</th></tr></thead>
+    <tbody>
+      <tr><td><b>Correção e equivalência</b></td><td>As três implementações produzem a saída canônica da seção 3, idêntica entre si e ao gabarito, nos cinco casos — demonstrado por uma bateria comum aplicada às três.</td><td>25%</td></tr>
+      <tr><td><b>Fidelidade ao paradigma</b></td><td>Além de obedecer aos critérios da seção 4, as soluções mostram o que cada paradigma torna natural e o que torna desajeitado <em>neste</em> problema.</td><td>20%</td></tr>
+      <tr><td><b>Análise comparativa</b></td><td>Os três eixos com evidência, com as variáveis de confusão tratadas de frente, e uma conclusão que diz qual paradigma foi adequado e o que mudaria a resposta.</td><td>20%</td></tr>
+      <tr><td><b>Auditoria da versão gerada</b></td><td>Defeitos classificados pela causa mais precoce, cada um com a pergunta "qual verificador o pegaria mais barato" respondida.</td><td>20%</td></tr>
+      <tr><td><b>Método de medição</b></td><td>Os dois regimes separados, mediana e dispersão em vez de média, e o modelo de implementação explicando os números.</td><td>10%</td></tr>
+      <tr><td><b>Reprodutibilidade</b></td><td>Um comando roda as três soluções nos cinco casos e compara com o gabarito.</td><td>5%</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="recap">
+    <h3>Se vocês lembrarem só disso</h3>
+    <ol>
+      <li>A saída é um JSON com formato fixo (seção 3). Sem isso, não há como comparar as três versões — e a comparação vale 25%.</li>
+      <li>A validação da matriz roda primeiro. Com ciclo, o programa reporta e para.</li>
+      <li>"Maior grade" é maior <strong>número de disciplinas</strong>. Empates, todos listados.</li>
+      <li>Escrever a mesma solução imperativa três vezes é o jeito mais rápido de perder 20% da nota.</li>
+      <li>A versão gerada por IA entra intacta, para ser auditada, não corrigida.</li>
+      <li>O eixo Desempenho compara implementações. Só atribua diferença ao paradigma apontando o mecanismo.</li>
+      <li>Os casos 4 e 5 — conjunto vazio e teto ativo — são os que quebram implementação. Rodem os dois nas três versões.</li>
+      <li>Anotem as impressões <strong>enquanto</strong> programam. A análise comparativa não se reconstrói depois.</li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<div class="nav"><a href="index.html">Índice do caderno</a><a href="../plano_ensino_cc0114.html">Plano de ensino &rarr;</a></div>
+
+<footer>
+  <b>CC0114 — Teoria e Paradigmas de Linguagens de Programação</b> · Curso de Ciência da Computação · UNIFAP · 2026.2<br>
+  T2 — Rosetta de Paradigmas · 15% da média final · Lançado em 04/11/2026, entrega final em 25/11/2026.<br>
+  As saídas esperadas da seção 5 foram calculadas e conferidas por duas implementações independentes.
+</footer>
+
+</div>
+</body>
+</html>
