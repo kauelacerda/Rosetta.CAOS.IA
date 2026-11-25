@@ -1,0 +1,161 @@
+Fidelidade ao critério funcional (seção 4)
+Bem atendido:
+- Não há laço, let nem reatribuição.
+- As estruturas são congeladas com Object.freeze e deepFreeze.
+- A ordenação é um merge sort recursivo próprio.
+- A separação entre núcleo puro e casca impura está nítida: só main lê arquivo e imprime.
+Pontos que um avaliador pode questionar:
+1. deepFreeze usa .map só pelo efeito colateral. Congelar é uma mutação do objeto. Pelo critério estrito ("nenhum valor é modificado depois de criado"), Object.freeze em objetos vindos do JSON.parse modifica o valor. O .map sem usar o retorno é um cheiro, e forEach seria mais honesto. Vale registrar isso como achado da análise, já que const e freeze em JS são disciplina, não garantia.
+2. resolver chama deepFreeze nas entradas, o que muta os argumentos recebidos. A função deixa de ser estritamente pura, porque quem chamou vê seus dados congelados depois.
+3. indexarPorCodigo usa reduce com spread, o que é O(n²) em cópias de objeto. Para 200 disciplinas ainda é pequeno, mas é um custo do paradigma (cópia em vez de mutação) que serve de evidência no eixo Desempenho.
+4. visitados é um array com includes, ou seja, busca linear. A detecção de ciclo vira O(n²) em vez de O(n+m). Isso também aparece no eixo de complexidade.
+5. gerarGradesValidas não faz poda. Ela gera todas as grades válidas, que podem chegar a 2ⁿ, e só depois filtra pelo maior tamanho. A OO em Java faz branch and bound. Com oferta de 16 disciplinas, são 65 mil combinações no pior caso, o que é viável. Mas a diferença entre as duas versões é uma variável de confusão para a medição: não é paradigma, é algoritmo.
+6. Valor de ciclo num grafo com pré-requisito inexistente: igual à OO, ignorado sem erro.
+
+
+Funcional
+Critério: transparência referencial — toda chamada com os mesmos argumentos pode ser substituída
+pelo seu resultado sem mudar o programa. Nenhum valor é modificado depois de criado; nenhuma
+variável é reatribuída; nenhum laço.
+Núcleo puro, casca impura. Todas as funções que decidem algo são puras. As impuras são apenas duas
+— ler os arquivos e imprimir o JSON — e ficam na fronteira: nenhuma função de cálculo as chama. Em
+Haskell o sistema de tipos obriga essa separação; em Python e JavaScript ela é só disciplina. Essa
+diferença é ótimo material para a análise.
+Se escolherem Python ou JavaScript, dois avisos: use tuple e frozenset (ou bibliotecas
+persistentes) para as estruturas do domínio, porque const em JS não torna o objeto imutável; e
+nenhuma das duas faz otimização de chamada de cauda, então recursão profunda estoura. Se
+precisarem mexer no limite de recursão, registrem isso como achado da análise — "o paradigma exige
+recursão e a implementação não a suporta" é exatamente o tipo de observação que este trabalho
+procura. Sugestões: Haskell, Elixir, F#, Scala, ou Python/JavaScript em estilo estritamente funcional.   eu quero em JavaScript 
+
+Orientada a objetos
+Critério: o domínio modelado em objetos que guardam dados e as decisões sobre eles. Três exigências
+verificáveis:
+1Diga, não pergunte. Nenhuma classe cujos únicos membros públicos sejam getters e setters. A
+regra sobre pré-requisito pertence a quem tem os dados do pré-requisito.
+2Polimorfismo com despacho dinâmico usado de fato em pelo menos um ponto. Por exemplo, uma
+interface Restricao implementada por TetoDeCargaHoraria e ConflitoDeHorario , que a busca
+da pergunta 4 consulta sem saber qual é qual.
+3Sem instanceof ou switch sobre tipo onde o despacho dinâmico resolveria.
+
+Orientada a objetos
+Critério: o domínio modelado em objetos que guardam dados e as decisões sobre eles. Três exigências
+verificáveis:
+1Diga, não pergunte. Nenhuma classe cujos únicos membros públicos sejam getters e setters. A
+regra sobre pré-requisito pertence a quem tem os dados do pré-requisito.
+2Polimorfismo com despacho dinâmico usado de fato em pelo menos um ponto. Por exemplo, uma
+interface Restricao implementada por TetoDeCargaHoraria e ConflitoDeHorario , que a busca
+da pergunta 4 consulta sem saber qual é qual.
+3Sem instanceof ou switch sobre tipo onde o despacho dinâmico resolveria. em C#
+
+Imperativa
+Critério: o algoritmo avança mutando estado; a unidade de composição é o comando, não a expressão;
+nenhuma coleção é percorrida, filtrada, agregada, ordenada ou combinada por uma única chamada de
+biblioteca. Se é preciso visitar todos os elementos, o percurso é escrito à mão.
+Em Python, isso proíbe nominalmente: map , filter , reduce , compreensões de
+lista/dicionário/conjunto, expressões geradoras, sum , any , all , min / max e sorted (com ou sem
+key= ), operações de conjunto ( - , & , | ), collections.Counter e todo o itertools — em especial
+combinations , que resolveria a pergunta 4 numa linha. Em C e Go a regra quase não morde, porque a
+linguagem já não oferece essas construções: aí o mérito da sua versão está em outro lugar, e a análise
+comparativa deve dizer qual. em Python. 
+
+# Compilar
+javac oo/SolucaoOO.java
+
+# Caso 1 — Dados padrão (teto 240h)
+java -cp oo SolucaoOO dados/matriz.json dados/oferta.json dados/historico.json
+
+# Caso 2 — Matriz inválida com ciclo (CC0106 -> CC0109 -> CC0106)
+java -cp oo SolucaoOO dados/caso2_ciclo.json dados/oferta.json dados/historico.json
+
+# Caso 3 — Aluno calouro (histórico vazio)
+java -cp oo SolucaoOO dados/matriz.json dados/oferta.json dados/caso3_historico_vazio.json
+
+# Caso 4 — Aluno que já cursou toda a oferta
+java -cp oo SolucaoOO dados/matriz.json dados/oferta.json dados/caso4_historico_completo.json
+
+# Caso 5 — Teto reduzido para 150h
+java -cp oo SolucaoOO dados/matriz.json dados/oferta.json dados/caso5_teto_reduzido.json
+
+caso1: FALHOU (saída inválida: Expecting value: line 1 column 1 (char 0))
+caso2: FALHOU (saída inválida: Expecting value: line 1 column 1 (char 0))
+caso3: FALHOU (saída inválida: Expecting value: line 1 column 1 (char 0))
+caso4: FALHOU (saída inválida: Expecting value: line 1 column 1 (char 0))
+caso5: FALHOU (saída inválida: Expecting value: line 1 column 1 (char 0))
+
+5 caso(s) com problema. Utilizando a versão em Java.
+
+analise do código em java para a criação da auditoria
+Depois rodem os cinco casos de teste
+em cima dela.Para cada defeito encontrado, o relatório precisa de três coisas:
+1Descrever o defeito e mostrar a entrada que o revela.
+2Classificar pela causa mais precoce, usando a tabela abaixo. Se dois rótulos couberem, escolham
+o primário e citem o secundário.
+3Dizer qual verificador o pegaria mais barato: o compilador, um teste automatizado, a revisão
+humana, ou só o usuário em produção. Esta é a pergunta que amarra o trabalho ao resto da
+disciplina.
+NATUREZAO QUE É, E O QUE NÃO É
+Erro de tipoOperação aplicada a um valor cujo tipo não a admite. Em linguagem estática
+aparece na compilação; em dinâmica pode virar exceção em execução — ou, pior,
+coerção silenciosa que produz resposta errada sem erro nenhum. Os três
+desfechos são diferentes e devem ser distinguidos.
+Erro de escopo ou vinculaçãoO nome existe no programa, mas está ligado à coisa errada ou não é visível ali:
+sombreamento, captura de closure sobre variável de laço, tempo de vida, escopo de
+módulo.
+Fato inventadoO nome não existe em lugar nenhum: função, biblioteca, parâmetro ou
+comportamento documentado que o modelo fabricou. É específico de código
+gerado, e é o que distingue esta categoria da anterior.
+Efeito colateral ou aliasingMutação não pretendida de estrutura compartilhada, estado global, argumento
+padrão mutável, objeto devolvido e depois modificado por quem chamou. Efeito
+colateral em si não é defeito — não pretendido é.
+Semântica do problemaO código é bem formado e bem comportado, mas implementa a regra errada: trata
+pré-requisitos como OU em vez de E, confunde "cursou" com "foi aprovado",
+devolve uma grade máxima em vez de todas.
+Terminação ou robustezNão termina, estoura a pilha, lança exceção não tratada, ou falha em entrada vazia
+ou degenerada. É a categoria dos casos 2 e 4 — e a IA quase sempre escreve
+verificação recursiva de pré-requisito sem detecção de ciclo.
+ComplexidadeCorreto, mas inviável: busca exponencial onde há solução polinomial, recomputação
+repetida do mesmo subproblema.
+Suposição não declaradaO modelo preencheu silenciosamente uma lacuna da especificação em vez de
+perguntar. É o defeito que nenhum compilador e nenhum teste pegam — e por isso
+o mais interessante dos oito.
+O QUE NÃO CONTA COMO DEFEITO
+Estilo, nomes, formatação e fidelidade a paradigma não são defeitos nesta auditoria — a versão da
+IA não está sujeita às regras da seção 4. Defeito é o que faz o programa dar resposta errada, não
+dar resposta, ou depender de algo que não existe.
+
+Execução nos 5 Casos de Teste
+O programa aceita os três arquivos JSON na ordem `<matriz> <oferta> <historico>` (assumindo os arquivos do Caso 1 como padrão):# Caso 1 — Dados padrão (teto 240h)
+python3 imperativa/solucao.py dados/matriz.json dados/oferta.json dados/historico.json
+
+# Caso 2 — Matriz inválida com ciclo (CC0106 -> CC0109 -> CC0106)
+python3 imperativa/solucao.py dados/caso2_ciclo.json dados/oferta.json dados/historico.json
+
+# Caso 3 — Aluno calouro (histórico vazio)
+python3 imperativa/solucao.py dados/matriz.json dados/oferta.json dados/caso3_historico_vazio.json
+
+# Caso 4 — Aluno que já cursou toda a oferta
+python3 imperativa/solucao.py dados/matriz.json dados/oferta.json dados/caso4_historico_completo.json
+
+# Caso 5 — Teto reduzido para 150h
+python3 imperativa/solucao.py dados/matriz.json dados/oferta.json dados/caso5_teto_reduzido.json
+
+Arquivo de Projeto (`oo/RosettaOO.csproj`)<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>                                                                                                                                                                                              Implementação Completa (`oo/Program.cs`)                                                                                                                          Orientada a objetos
+Critério: o domínio modelado em objetos que guardam dados e as decisões sobre eles. Três exigências
+verificáveis:
+1Diga, não pergunte. Nenhuma classe cujos únicos membros públicos sejam getters e setters. A
+regra sobre pré-requisito pertence a quem tem os dados do pré-requisito.
+2Polimorfismo com despacho dinâmico usado de fato em pelo menos um ponto. Por exemplo, uma
+interface Restricao implementada por TetoDeCargaHoraria e ConflitoDeHorario , que a busca
+da pergunta 4 consulta sem saber qual é qual.
+3Sem instanceof ou switch sobre tipo onde o despacho dinâmico resolveria.
+
